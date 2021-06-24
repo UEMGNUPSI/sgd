@@ -18,14 +18,10 @@
 
   <link href="../../css/sb-admin-2.min.css" rel="stylesheet">
   <link href="../../css/index.css" rel="stylesheet">
+
+
   <link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-  <script>
-        // function editarModal() {
-        //     $('#editar').modal('show');
-        //     event.preventDefault();
-        // }
-    </script>
 </head>
 
 <body id="page-top">
@@ -34,10 +30,9 @@
 <div class="container-fluid">
     <div class="row">
          <a href="index.php" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>
-         <a href="../form/cadastroOcorrencia.php" class="btn-circle btn-lg custom-link"  title="Cadastrar Ocorrencia"><i class="icoLojaCadastro fas fa-plus-circle"></i> </a>        
-            <h1 style="font-weight: 330;" class="col-10 text-center">
-                <i class="fas fa-exclamation-circle" style="color: #337ab7; "></i>
-                Ocorrências
+         <a href="../form/cadastroSemestre.php" class="btn-circle btn-lg custom-link"  title="Cadastrar Ocorrencia"><i class="icoLojaCadastro fas fa-plus-circle"></i> </a>        
+            <h1 style="font-weight: 330;" class="col-9 text-center">
+                Semestre Letivo
             </h1>    
     </div>    
   <div class="card shadow mb-4">
@@ -49,50 +44,46 @@
             <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th>Descrição</th>
-                  <th>Pessoa</th>
+                  <th>Nome</th>
+                  <th>Status</th>
                   <th>Excluir</th>
                   <th>Editar</th>
                 </tr>
               </thead>
               <tbody>
               <?php 
-                  $sql = "SELECT * FROM ocorrencia";
+                  $sql = "SELECT * FROM semestreletivo";
                   $consulta = mysqli_query($conn, $sql);
-                  while ($dados = mysqli_fetch_assoc($consulta)) {
-                      $pessoa_id = $dados['pessoa_id'];       
-                      $sql_ocorrencia = "SELECT * FROM ocorrencia JOIN pessoas ON pessoas.id_pessoa = ocorrencia.pessoa_id WHERE pessoa_id = $pessoa_id";
-                      $consulta_ocorrencia = mysqli_query($conn, $sql_ocorrencia);
-                      $dados_ocorrencia = mysqli_fetch_assoc($consulta_ocorrencia);  
-                      $id = $dados['id_ocorrencia'];                              
+                  while ($dados = mysqli_fetch_assoc($consulta)) {     
+                    $id = $dados['id_letivo'];                         
                       echo "<tr>";
-                      echo "<td>" . $dados['descricao_ocorrencia'] . "</td>"; //nome ocorrencia
-                      echo "<td>" . $dados_ocorrencia['nome'] . "</td>"; //nome pessoa ?>
+                      echo "<td>" . $dados['descricao_letivo'] . "</td>"; 
+                      echo "<td>" . $dados['status_letivo'] . "</td>"; ?>
                       <td style="color: #337ab7;" data-toggle="modal" data-target="#Cancelar"><i class="fas fa-trash-alt"></i></td>
-                      <td style="color: #337ab7;"><a data-toggle="modal" data-target="#editar<?php echo $id; ?>"><i class="fas fa-pencil-alt"></i></a></td>
-                      </tr>                  
+                      <td style="color: #337ab7;"><a data-toggle="modal" data-target="#editar<?php echo $id; ?>"><i class="fas fa-pencil-alt"></i></i></a></td>
+                      </tr>   
 <!-- MODAL EDITAR  -->
 <div class="modal fade" id="editar<?php echo $id; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 id="myModalLabel">Deseja editar essa ocorrência?</h4>                     
+                    <h4 id="myModalLabel">Deseja editar esse semestre letivo?</h4>                     
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>                              
                 </div>
                 <div classs="modal-body">
-                <form method="POST" action="../../model/ocorrencia/edita.php?id=<?php echo $dados['id_ocorrencia']; ?>" class="ml-2">
+                <form method="POST" action="../../model/semestre/edita.php?id=<?php echo $dados['id_letivo']; ?>" class="ml-2">
                   <div class="form-row ml-3">
                       <div class="form-group col-sm-8">
-                          <label for="desc">Descrição Ocorrência:</label>
-                          <input type="text" id="desc" class="form-control" name="desc" value="<?php echo $dados['descricao_ocorrencia']; ?>">
+                          <label for="nome">Descrição Semestre:</label>
+                          <input type="text" id="nome" class="form-control" name="nome" value="<?php echo $dados['descricao_letivo']; ?>">
                       </div>
                   </div>
                   <div class="form-row ml-3">
                       <div class="form-group col-sm-8">
-                          <label for="nome">Nome:</label>
-                          <input disabled type="text" id="nome" class="form-control" name="nome"  value="<?php echo $dados_ocorrencia['nome']; ?>">
+                          <label for="status">Status Semestre:</label>
+                          <input type="text" id="status" class="form-control" name="status"  value="<?php echo $dados['status_letivo']; ?>">
                       </div>
                   </div>
                 </div>
@@ -104,8 +95,9 @@
             </div>
         </div>
     </div>
-</div>
-                <?php } ?>                                              
+</div> 
+                <?php }
+                  ?>                 
               </tbody>
             </table>
           </div>
@@ -134,22 +126,18 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 id="myModalLabel">Deseja mesmo escluir este cadastro?</h4>                     
+                    <h4 id="myModalLabel">Deseja mesmo excluir este cadastro?</h4>                     
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>                              
                 </div>
                 
-                <div class="modal-footer">                  
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Ops, não quero!</button>
-                    <a type="button" href="#" class="btn btn-primary" style="color: white">Sim, eu quero!</a>
+                <div class="modal-footer">
+                    <button type="button" href="#" class="btn btn-danger">Excluir</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
   
   <script src="../../vendor/jquery/jquery.min.js"></script>
   <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
