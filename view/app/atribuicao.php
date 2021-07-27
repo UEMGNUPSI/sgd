@@ -28,118 +28,193 @@
 
 <?php include_once "../../model/conexao.php" ?>
 <?php include_once "../navbar.html" ?>
-    <div class="container-fluid">
-        <div class="row justify-content-md-center">
-            <a href="index.php" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>            
-            <h1 style="font-weight: 330;" class="col-9 text-center ">
-            <i class="icoLojaCadastro fas fa-user-plus"></i>     Atribuições
-                </h1>    
-        </div>    
-        <form method="POST" action="#">
-            <div class="form-row ">
-                <div class="form-group col-sm-6">
-                    <label for="telefone">Docente:</label>
-                    <select class="form-control" name="nivel">
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
-                </div>
+<div class="container-fluid">
+    <div class="row justify-content-md-center">
+        <a href="javascript:history.back()" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>            
+        <h1 style="font-weight: 330;" class="col-9 text-center ">
+          <i class="icoLojaCadastro fas fa-user-plus"></i>Atribuições
+        </h1>    
+    </div>    
+      <form method="GET" action="#" name="formulario">
+        <div class="form-row ">
+            <div class="form-group col-sm-6">
+                <label for="telefone">Docente:</label>
+                <select class="form-control" name="pessoa">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
             </div>
-            <div class="form-row ">
-                <div class="form-group col-sm-6">
-                    <label for="telefone">Semestre:</label>
-                    <select class="form-control" name="nivel">
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
-                </div>
-            </div> <!-- Fim row -->
-            <div class="form-row justify-content-md-center">
-                <div class="form-group col-sm-6 text-center">
-                    <label for="telefone">Curso:</label>
-                    <select class="form-control" name="nivel">
-                        <option>1</option>
-                        <option>2</option>
-                    </select>
-                </div>
-            </div> <!-- Fim row -->
-    <div class="row">
-     <div class="card shadow " style="width: 55%;">
-     <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Lista de Disciplinas</h6>
         </div>
-        <div class="card-body">
-          <div class="table-responsive" >
-            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Departamento</th>
-                  <th>Adicionar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr> 
-                    <td>SI</td>
-                    <td>AAA</td>
-                    <td style="color: #337ab7;"><i class="fas fa-user-plus"></i></td>
-                </tr>                           
-              </tbody>
-            </table>
-          </div>
+        <div class="form-row ">
+            <div class="form-group col-sm-6">
+                <label for="telefone">Semestre:</label>
+                <select class="form-control" name="semestre" id="semestre">
+                    <option >Selecione...</option>
+                        <optgroup label="Semestres">
+                            <?php 
+                                $sql = "SELECT * FROM semestreletivo";
+                                $consulta = mysqli_query($conn, $sql);
+
+                                while ($dados = mysqli_fetch_assoc($consulta)) {
+                                    ?>
+
+                                    <option value="<?php echo $dados['id_letivo'];?>" 
+                                        <?php 
+                                            if (isset($_GET['semestre'])) {
+                                                echo $_GET['semestre']== $dados['status_letivo']?'selected':'';
+                                                } 
+                                        ?> 
+                                    > <!-- VERIFICAÇÃO SELECTED DO OPTION --> 
+                                        <?php echo $dados['descricao_letivo']; ?> <!-- VALOR DO OPTION -->
+                                    </option>
+                            <?php
+                                }
+                            ?>
+                        </optgroup>
+                </select>
+            </div>
+        </div> <!-- Fim row -->
+        <div class="form-row justify-content-md-center">
+            <div class="form-group col-sm-6 text-center">
+              <label for="telefone">Curso:</label>
+                <select class="form-control" name="curso" onChange="javascript: submitform()">
+                  <option>Selecione...</option>
+                    <optgroup label="Cursos">
+                        <?php  
+                            $sql = "SELECT * FROM curso";
+                            $consulta = mysqli_query($conn, $sql);
+
+                            while ($dados = mysqli_fetch_assoc($consulta)) { ?>
+
+                                <option value="<?php echo $dados['id_curso'];?>" 
+                                    <?php 
+                                        if (isset($_GET['curso'])) {
+                                            echo $_GET['curso']== $dados['id_curso']?'selected':'';
+                                            } 
+                                    ?> > <!-- VERIFICAÇÃO SELECTED DO OPTION --> 
+                                    <?php echo $dados['nome']; ?> <!-- VALOR DO OPTION -->
+                                </option>
+                        <?php
+                            }
+                        ?>
+                    </optgroup>
+                </select>
+            </div>
+        </div> <!-- Fim row -->
+        <script type="text/javascript">
+            function submitform() {
+                document.formulario.submit();
+            }
+        </script>
+      </form>  
+
+  <?php                  
+      if (isset($_GET['curso'])) {
+        $semestre = $_GET['semestre'];
+        $curso = $_GET['curso'];
+  ?>  
+
+    <div class="row">
+      <div class="col-7">
+        <div class="card shadow">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Lista de Disciplinas Ofertadas</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive" >
+
+                  <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Disciplina</th>
+                        <th>Curso</th>
+                        <th>Adicionar</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                        <?php 
+                          $sql = "SELECT * FROM ofertadas WHERE curso_id = $curso";
+                          $consulta = mysqli_query($conn, $sql);
+                          while ($dados = mysqli_fetch_assoc($consulta)) {
+                            $disciplina_id = $dados['disciplina_id'];        
+                            $curso_id = $dados['curso_id'];    
+                            $sql_ofertadas = "SELECT * FROM ofertadas JOIN disciplina ON disciplina.id_disciplina = ofertadas.disciplina_id WHERE disciplina_id = $disciplina_id";
+                            $consulta_ofertadas = mysqli_query($conn, $sql_ofertadas);
+                            $dados_ofertadas = mysqli_fetch_assoc($consulta_ofertadas);  
+                            
+                            $sql_curso = "SELECT * FROM ofertadas JOIN curso ON curso.id_curso = ofertadas.curso_id WHERE curso_id = $curso_id";
+                            $consulta_curso = mysqli_query($conn, $sql_curso);
+                            $dados_curso = mysqli_fetch_assoc($consulta_curso);
+                            $id = $dados['id_ofertadas'];                              
+                            echo "<tr>";
+                            echo "<td>" . $dados_ofertadas['nome'] . "</td>"; //nome disciplina
+                            echo "<td>" . $dados_curso['nome'] . "</td>"; //nome curso 
+                        ?>                     
+                            <td>
+                              <a href="#"><i class="fas fa-trash"></i></a> 
+                            </td>
+                          </tr>           
+                        <?php } ?>                        
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
         </div>
       </div>
-      <div> 
-        <a class="btn btn-primary ml-3 mt-5 text-white" style="pointer-events: none;cursor: default;text-decoration: none;">
-          <i class="fa fa-arrow-right" aria-hidden="true" ></i>
+
+      <div class="col-1" style="padding-top: 50px;"> 
+        <a class="btn btn-primary text-white" style="pointer-events: none;cursor: default;text-decoration: none;">
+            <i class="fa fa-arrow-right" aria-hidden="true" ></i>
+        </a>
+        <a class="btn btn-primary text-white mt-3" style="pointer-events: none;cursor: default;text-decoration: none;">
+            <i class="fa fa-arrow-left" aria-hidden="true" ></i>
         </a>
       </div>
-      <div class="card shadow ml-3 " style="width: 35%;">
-      <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Disciplinas Atribuidas</h6>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive" >
-            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Departamento</th>
-                  <th>Curso</th>
-                </tr>
+
+      <div class="col-4">
+        <div class="card shadow">
+          <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Disciplinas Atribuidas</h6>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive" >
+
+              <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Departamento</th>
+                    <th>Curso</th>
+                  </tr>
                 </thead>
                 <tbody>
-                <tr> 
+                  <tr> 
                     <td>SI</td>
                     <td>AAA</td>
                     <td> asas</td>
-                </tr>                              
-              </tbody>
-            </table>
+                  </tr>                              
+                </tbody>
+              </table>
+
+            </div>
           </div>
         </div>
       </div>
+    </div> <!-- fim row -->
 
-    </div>
-            <div class="form-row my-3" style="float: right;">
-                <div class="col-sm-12" >                
-                    <input class="btn btn-primary mr-3" type="submit" value="Salvar" id="salvar"  />
-                </div>
-            </div>
-        </form>        
-    </div><!-- fim container fluid -->
-</div>   
-
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; UEMG 2020</span>
-          </div>
+   <?php } ?>      
+  </div><!-- fim container fluid -->
+</div>  
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Copyright &copy; UEMG 2020</span>
         </div>
-      </footer>
-
-    </div>
-  </div> <!-- fim wrapper -->
+      </div>
+    </footer>
+  </div>
+</div> <!-- fim wrapper -->
   
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>

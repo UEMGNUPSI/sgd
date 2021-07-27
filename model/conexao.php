@@ -1,9 +1,9 @@
 <?php                               
-  $servername = "127.0.0.1";
-  $database = "sgd";
-  $username = "root";
-  $password = "";
+  $servername = "mysql592.lnxserversecure.com";
+  $database = "uemgfrut_dcet";
+  $username = "uemgfrut_dcetnup";
+  $password = "Ispun@18";
                    
-    $conn = mysqli_connect($servername, $username, $password,  $database);
+  $conn = mysqli_connect($servername, $username, $password,  $database);
 
 ?>

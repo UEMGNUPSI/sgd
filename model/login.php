@@ -14,9 +14,9 @@
 
     if(isset($resultado)){
     
-    header('Location: ../view/app/index.php?a='.$_SESSION['masp'].'');
+    // header('Location: ../view/app/index.php?a='.$_SESSION['masp'].'');
     }else {    
-    echo"<script language='javascript' type='text/javascript'>window.location.href='../view/login.php?l=Usuário ou senha Inválido!';</script>"; 
+    // echo"<script language='javascript' type='text/javascript'>window.location.href='../view/login.php?l=Usuário ou senha Inválido!';</script>"; 
     }
 
 ?>
