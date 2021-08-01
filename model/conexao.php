@@ -1,8 +1,8 @@
 <?php                               
-  $servername = "mysql592.lnxserversecure.com";
-  $database = "uemgfrut_dcet";
-  $username = "uemgfrut_dcetnup";
-  $password = "Ispun@18";
+  $servername = "localhost";
+  $database = "sgd";
+  $username = "root";
+  $password = "";
                    
   $conn = mysqli_connect($servername, $username, $password,  $database);
 
