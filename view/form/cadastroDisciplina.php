@@ -39,7 +39,7 @@
 <body id="page-top">
 
 <?php include_once "../../model/conexao.php" ?>
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 
 <div class="container-fluid">
 
@@ -102,7 +102,7 @@
             </div>
             <div class="form-group col-sm-4">
                 <label for="cat">Créditos aulas teóricos:</label>
-                <input type="text" id="n1" class="form-control" name="cat" maxlength="4">
+                <input type="number" id="n1" class="form-control" name="cat" maxlength="4">
             </div>
         </div><!-- Fim row -->
 
@@ -124,19 +124,19 @@
         </div><!-- Fim row -->                         
 
         <div class="form-row my-3" >
-        <div class="form-group col-sm-2">
-                    <label for="credito_total">Crédito Totais:</label>
+        <div class="form-group col-sm-3">
+                    <label for="credito_total">Crédito Totais(horas/aula):</label>
                     <button type="text" id="credito_total" class="form-control" name="credito_total"  disabled>
                         <span id='resultado'></span>
                     </button>
                 </div>
                 <div class="form-group col-sm-2">
-                    <label for="modulo">Módulo Aula:</label>
+                    <label for="modulo">Módulo Aula(/horas):</label>
                     <button type="text" id="modulo" class="form-control" name="modulo" disabled>    
                         <span id='resultado2'></span>
                     </button>
                 </div>
-                <div class="form-group col-sm-6"></div> 
+                <div class="form-group col-sm-5"></div> 
                 <div class="form-group ">    
                     <input class="btn btn-primary mr-2" type="submit" value="Salvar" id="salvar" style="float: right;" />
                 </div>

@@ -26,7 +26,7 @@
 <body id="page-top">
 
 <?php include_once "../../model/conexao.php" ?>
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 
 
 <div class="container-fluid">
@@ -62,7 +62,7 @@
                 <input type="text" id="CPF" class="form-control" name="CPF" maxlength="14" onkeydown="javascript: fMasc( this, mCPF );">
             </div>
             <div class="form-group col-sm-4">
-                <label for="rt">Regime de Trabalho:</label>
+                <label for="rt">Situação Funcional:</label>
                 <input type="text" id="rt" class="form-control" name="rt" maxlength="10">
             </div>
         </div><!-- Fim row -->

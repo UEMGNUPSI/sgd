@@ -23,7 +23,7 @@
 </head>
 <body id="page-top">
 
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 
 <div class="container-fluid">
     <div class="row">        

@@ -20,19 +20,16 @@
   <link href="../../css/index.css" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.8.2.min.js" integrity="sha256-9VTS8JJyxvcUR+v+RTLTsd0ZWbzmafmlzMmeZO9RFyk=" crossorigin="anonymous"></script>
 
   <link href="../../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
  
-  <script>
-              
-  </script>
-
 </head>
 
 <body id="page-top">
 
 <?php include_once "../../model/conexao.php" ?>
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 
     <div class="container-fluid">
         <div class="row justify-content-md-center">
@@ -136,9 +133,8 @@
                     $consulta_semest = mysqli_query($conn, $sql_semest);
                     $dados_semest = mysqli_fetch_assoc($consulta_semest);
             ?>  
-
         </form>
- 
+        
 <div class="row" >
     <div class="col-7">
         <div class="card shadow " >
@@ -151,24 +147,78 @@
                     <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Nome</th>
+                                <th>CAT</th>
+                                <th>CAP</th>
+                                <th>CT</th>
                                 <th>Adicionar</th>
                             </tr>
                         </thead>
                         <tbody>
+                            <form action="../../model/ofertadas/cadastro.php?semestre=<?php echo $semestre;?>&curso=<?php echo $curso;?>" method="POST">
                                 <?php 
                                 $sql = "SELECT * FROM disciplina where curso_id=$curso";
                                 $consulta = mysqli_query($conn, $sql);
                                 while ($dados = mysqli_fetch_assoc($consulta)) {     
                                     $id = $dados['id_disciplina'];                         
                                     echo "<tr>";
+                                    echo "<td> <div class='form-check'><input class='form-check-input' name='checkbox[]' type='checkbox' value='".$id."'id='checkbox'></div></td>"; 
+
                                     echo "<td>" . $dados['nome'] . "</td>"; 
+                                    echo "<td>" . $dados['credito_aulaTeorico'] . "</td>"; 
+                                    echo "<td>" . $dados['credito_aulaPratica'] . "</td>"; 
+                                    echo "<td>" . $dados['credito_total'] . "</td>"; 
                                     echo "<td>" ?>
-                                            <a href="../../model/ofertadas/cadastro.php?disciplina=<?php echo $id?>&semestre=<?php echo $dados_semest['id_letivo'] ?>&curso=<?php echo $curso?>">
+                                        <?php if($dados['statusDuplicada'] == 0) { ?>
+                                            <a href="#" data-toggle="modal" data-target="#duplicar<?php echo $id?>" >
                                                 <i class="fas fa-plus-square"></i>
                                             </a> 
+                                        <?php  } else { ?>
+                                            <a href="#" data-toggle="modal" data-target="#cancelDuplicar<?php echo $id?>" >
+                                                <i class="fas fa-minus-square text-danger"></i>
+                                            </a>
+                                        <?php  } ?>
                                         </td>
-                                </tr>     
+                                    </tr>   
+                                    <div class="modal fade" id="duplicar<?php echo $id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 id="myModalLabel"><strong>Duplicar créditos</strong></h4>                     
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>                              
+                                                </div>
+                                                <div class="modal-body">
+                                                <p class="h6">Deseja duplicar os créditos para aulas práticas desta disciplina:&nbsp;<strong><?php echo $dados['nome']; ?> </strong> ?</p>   
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" href="#" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                                    <a type="button" href="../../model/ofertadas/editarDuplicada.php?disciplina=<?php echo $id; ?>&semestre=<?php echo $semestre; ?>&curso=<?php echo $curso; ?>" class="btn btn-primary">Sim</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="cancelDuplicar<?php echo $id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 id="myModalLabel"><strong>Duplicar créditos</strong></h4>                     
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>                              
+                                                </div>
+                                                <div class="modal-body">
+                                                <p class="h6">Deseja cancelar a duplicação dos créditos para aulas práticas desta disciplina:&nbsp;<strong><?php echo $dados['nome']; ?> </strong> ?</p>   
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" href="#" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                                    <a type="button" href="../../model/ofertadas/retirarDuplicada.php?disciplina=<?php echo $id; ?>&semestre=<?php echo $semestre; ?>&curso=<?php echo $curso; ?>" class="btn btn-primary">Sim</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php } ?>                                                 
                         </tbody>
                     </table>
@@ -176,12 +226,13 @@
             </div>
         </div>
     </div>
-      
-    <div class="col-1" style="padding-top: 50px;"> 
-        <a class="btn btn-primary text-white" style="pointer-events: none;cursor: default;text-decoration: none;">
-            <i class="fa fa-arrow-right" aria-hidden="true" ></i>
-        </a>
 
+    
+    <div class="col-1" style="padding-top: 50px;"> 
+        <button class="btn btn-primary text-white" type="submit">
+            <i class="fa fa-arrow-right" aria-hidden="true" ></i>
+        </button>
+    </form>
         <a class="btn btn-primary text-white mt-3" style="pointer-events: none;cursor: default;text-decoration: none;">
             <i class="fa fa-arrow-left" aria-hidden="true" ></i>
         </a>
@@ -199,6 +250,9 @@
                         <thead>
                             <tr>
                                 <th>Nome</th>
+                                <th>CAT</th>
+                                <th>CAP</th>
+                                <th>CT</th>
                                 <th>Excluir</th>
                             </tr>
                         </thead>
@@ -207,18 +261,44 @@
                             $sql = "SELECT * FROM ofertadas WHERE curso_id = $curso";
                             $consulta = mysqli_query($conn, $sql);
                             while ($dados = mysqli_fetch_assoc($consulta)) {
-                                $disciplina_id = $dados['disciplina_id'];       
+                                $disciplina_id = $dados['disciplina_id']; 
+                                $cat = $dados['credito_aulaTeorico'];
+                                $cap = $dados['credito_aulapratica'];       
+                                $ct = $dados['credito_total'];    
+       
                                 $sql_ofertadas = "SELECT * FROM ofertadas JOIN disciplina ON disciplina.id_disciplina = ofertadas.disciplina_id WHERE disciplina_id = $disciplina_id";
                                 $consulta_ofertadas = mysqli_query($conn, $sql_ofertadas);
                                 $dados_ofertadas = mysqli_fetch_assoc($consulta_ofertadas);       
                                 $id = $dados['id_ofertadas'];                              
                                 echo "<tr>";
                                 echo "<td>" . $dados_ofertadas['nome'] . "</td>"; //nome disciplina
+                                echo "<td>" . $cat  . "</td>"; 
+                                echo "<td>" . $cap . "</td>"; 
+                                echo "<td>" . $ct . "</td>"; 
                         ?>                     
-                                <td><a href="#">
-                                            <i class="fas fa-trash"></i>
+                                <td><a href="#" data-toggle="modal" data-target="#excluirOfertada<?php echo $id?>" >
+                                            <i class="fas fa-trash text-danger"></i>
                                     </a> </td>
                             </tr>           
+                            <div class="modal fade" id="excluirOfertada<?php echo $id?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 id="myModalLabel"><strong>Excluir disciplina ofertada</strong></h4>                     
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>                              
+                                        </div>
+                                        <div class="modal-body">
+                                        <p class="h6">Deseja excluir esta disciplina :&nbsp;<strong><?php echo $dados_ofertadas['nome']; ?> </strong>&nbsp; ofertada este semestre?</p>   
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" href="#" class="btn btn-danger" data-dismiss="modal">Não</button>
+                                            <a type="button" href="../../model/ofertadas/excluir.php?disciplina=<?php echo $id; ?>&semestre=<?php echo $semestre; ?>&curso=<?php echo $curso; ?>" class="btn btn-primary">Sim</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                           
                             <?php } ?>            
                         </tbody>
                     </table>
@@ -228,7 +308,13 @@
     </div>                           
      
 </div><!-- fim row tabelas-->
-
+        <div class="container my-auto">
+            <div class="copyright text-center my-auto">
+                <span>*CAT = Créditos aulas teóricas</span><br/> 
+                <span>*CAP = Créditos aulas práticas</span><br/> 
+                <span>*CT = Créditos totais</span>
+            </div>
+        </div>
 <?php }    
 ?>              
     </div><!-- fim container fluid -->

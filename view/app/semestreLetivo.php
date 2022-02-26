@@ -26,7 +26,7 @@
 
 <body id="page-top">
 <?php include_once "../../model/conexao.php" ?>
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 <div class="container-fluid">
     <div class="row">
          <a href="index.php" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>

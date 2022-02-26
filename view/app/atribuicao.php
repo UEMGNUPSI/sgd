@@ -27,7 +27,7 @@
 <body id="page-top">
 
 <?php include_once "../../model/conexao.php" ?>
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 <div class="container-fluid">
     <div class="row justify-content-md-center">
         <a href="javascript:history.back()" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>            
@@ -39,9 +39,30 @@
         <div class="form-row ">
             <div class="form-group col-sm-6">
                 <label for="telefone">Docente:</label>
-                <select class="form-control" name="pessoa">
-                    <option>1</option>
-                    <option>2</option>
+                <select class="form-control" name="docente">
+                  <option >Selecione...</option>
+                  <optgroup label="Docentes">
+                            <?php 
+                              $cargo_id = 2;
+                                $sql = "SELECT * FROM pessoas WHERE cargo_id = $cargo_id";
+                                $consulta = mysqli_query($conn, $sql);
+
+                                while ($dados = mysqli_fetch_assoc($consulta)) {
+                                    ?>
+
+                                    <option value="<?php echo $dados['id_pessoa'];?>" 
+                                        <?php 
+                                            if (isset($_GET['docente'])) {
+                                                echo $_GET['docente']== $dados['id_pessoa']?'selected':'';
+                                                } 
+                                        ?> 
+                                    > <!-- VERIFICAÇÃO SELECTED DO OPTION --> 
+                                        <?php echo $dados['nome']; ?> <!-- VALOR DO OPTION -->
+                                    </option>
+                            <?php
+                                }
+                            ?>
+                        </optgroup>
                 </select>
             </div>
         </div>
@@ -61,7 +82,7 @@
                                     <option value="<?php echo $dados['id_letivo'];?>" 
                                         <?php 
                                             if (isset($_GET['semestre'])) {
-                                                echo $_GET['semestre']== $dados['status_letivo']?'selected':'';
+                                                echo $_GET['semestre']== $dados['id_letivo']?'selected':'';
                                                 } 
                                         ?> 
                                     > <!-- VERIFICAÇÃO SELECTED DO OPTION --> 
@@ -72,6 +93,7 @@
                             ?>
                         </optgroup>
                 </select>
+                
             </div>
         </div> <!-- Fim row -->
         <div class="form-row justify-content-md-center">
@@ -110,6 +132,7 @@
 
   <?php                  
       if (isset($_GET['curso'])) {
+        $docente = $_GET['docente'];
         $semestre = $_GET['semestre'];
         $curso = $_GET['curso'];
   ?>  
@@ -151,7 +174,9 @@
                             echo "<td>" . $dados_curso['nome'] . "</td>"; //nome curso 
                         ?>                     
                             <td>
-                              <a href="#"><i class="fas fa-trash"></i></a> 
+                              <a href="../../model/atribuicao/cadastro.php?disciplina=<?php echo $id?>&semestre=<?php echo $semestre ?>&curso=<?php echo $curso?>&docente=<?php echo $docente?>">
+                                <i class="fas fa-plus-square"></i>
+                              </a>                             
                             </td>
                           </tr>           
                         <?php } ?>                        
@@ -180,22 +205,46 @@
           <div class="card-body">
             <div class="table-responsive" >
 
-              <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>Departamento</th>
-                    <th>Curso</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr> 
-                    <td>SI</td>
-                    <td>AAA</td>
-                    <td> asas</td>
-                  </tr>                              
-                </tbody>
-              </table>
+            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Docente</th>
+                                <th>Disciplina</th>
+                                <th>Excluir</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php 
+                            $sql = "SELECT * FROM atribuicao WHERE curso_id = $curso and pessoa_id = $docente";
+                            $consulta = mysqli_query($conn, $sql);
+                            while ($dados = mysqli_fetch_assoc($consulta)) {
+                                $ofertada_id = $dados['disciplina_id']; 
+                                $pessoa_id = $dados['pessoa_id'];  
+
+                                $sql = "SELECT * FROM ofertadas WHERE id_ofertadas = $ofertada_id";
+                                $consulta = mysqli_query($conn, $sql);
+                                $dados_ofertadas = mysqli_fetch_assoc($consulta);
+                                $disciplina_id = $dados_ofertadas['disciplina_id'];
+                                
+                                $sql_atribuicao = "SELECT * FROM disciplina WHERE id_disciplina = $disciplina_id";
+                                $consulta_atribuicao = mysqli_query($conn, $sql_atribuicao);
+                                $dados_atribuicao = mysqli_fetch_assoc($consulta_atribuicao); 
+                                
+                                $sql_pessoa = "SELECT * FROM atribuicao JOIN pessoas ON pessoas.id_pessoa = atribuicao.pessoa_id WHERE pessoa_id = $pessoa_id";
+                                $consulta_pessoa = mysqli_query($conn, $sql_pessoa);
+                                $dados_pessoa = mysqli_fetch_assoc($consulta_pessoa);       
+                                $id = $dados['id_atribuicao'];                              
+                                echo "<tr>";
+                                echo "<td>" . $dados_pessoa['nome'] . "</td>"; //nome pessoa
+                                echo "<td>" . $dados_atribuicao['nome'] . "</td>"; //nome disciplina
+                        ?>                     
+                                <td><a href="#">
+                                            <i class="fas fa-trash"></i>
+                                    </a> </td>
+                            </tr>           
+                            <?php } ?>            
+                        </tbody>
+                    </table>
 
             </div>
           </div>

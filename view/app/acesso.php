@@ -25,17 +25,18 @@
 </head>
 
 <body id="page-top">
+
 <?php include_once "../../model/conexao.php" ?>
 <?php include_once "../navbar.php" ?>
 <div class="container-fluid">
-    <div class="row">
-         <a href="index.php" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>
-         <a href="../form/cadastroCurso.php" class="btn-circle btn-lg custom-link"  title="Cadastrar Ocorrencia"><i class="icoLojaCadastro fas fa-plus-circle"></i> </a>        
-            <h1 style="font-weight: 330;" class="col-9 text-center">
-                Cursos
-            </h1>    
-    </div>    
-  <div class="card shadow mb-4">
+<div class="row justify-content-md-center">
+        <a href="javascript:history.back()" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>            
+        <a href="../form/cadastroNivelacesso.php" class="btn-circle btn-lg custom-link"  title="Cadastrar Ocorrencia"><i class="icoLojaCadastro fas fa-plus-circle"></i> </a>        
+        <h1 style="font-weight: 330;" class="col-9 text-center ">
+          <i class="icoLojaCadastro fas fa-window-restore"></i>Nivel de Acesso
+        </h1>    
+</div>
+<div class="card shadow mb-4">
         <div class="card-header py-3">
           <h6 class="m-0 font-weight-bold text-primary">Uemg Frutal</h6>
         </div>
@@ -44,47 +45,44 @@
             <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th>Unidade</th>
-                  <th>Nome</th>
+                  <th>Nivel de Acesso</th>
+                  <th>Cargo</th>
                   <th>Excluir</th>
-                  <th>Consultar</th>
+                  <th>Editar</th>
                 </tr>
               </thead>
               <tbody>
               <?php 
-                  $sql = "SELECT * FROM curso";
+                  $sql = "SELECT * FROM cargo";
                   $consulta = mysqli_query($conn, $sql);
-                  while ($dados = mysqli_fetch_assoc($consulta)) {
-                      $unidade_id = $dados['unidade_id'];       
-                      $sql_unidade = "SELECT * FROM curso JOIN unidade ON unidade.id_unidade = curso.unidade_id WHERE unidade_id = $unidade_id";
-                      $consulta_unidade = mysqli_query($conn, $sql_unidade);
-                      $dados_unidade = mysqli_fetch_assoc($consulta_unidade);                                
+                  while ($dados = mysqli_fetch_assoc($consulta)) {     
+                    $id = $dados['id_cargo'];                         
                       echo "<tr>";
-                      echo "<td>" . $dados_unidade['descricao_unidade'] . "</td>"; //nome unidade
-                      echo "<td>" . $dados['nome'] . "</td>"; //nome curso ?>
+                      echo "<td>" . $dados['nivel_id'] . "</td>";
+                      echo "<td>" . $dados['descricao_cargo'] . "</td>"; 
+                      ?>
                       <td style="color: #337ab7;" data-toggle="modal" data-target="#Cancelar"><i class="fas fa-trash-alt"></i></td>
-                      <td style="color: #337ab7;"><a href="consulta/consultaCurso.php?id=<?php echo $dados['id_curso']; ?>"><i class="fas fa-search"></i></a></td>
-                      </tr>    
+                      <td style="color: #337ab7;"><a data-toggle="modal" data-target="#editar<?php echo $id; ?>"><i class="fas fa-pencil-alt"></i></i></a></td>
+                      </tr>   
+ 
                 <?php }
-                  ?>                      
+                  ?>                 
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      </div><!-- fim container fluid -->
-      </div>   
-
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; UEMG 2020</span>
-          </div>
+</div><!-- fim container fluid -->
+</div>  
+    <footer class="sticky-footer bg-white">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Copyright &copy; UEMG 2020</span>
         </div>
-      </footer>
-
-    </div>
-  </div> <!-- fim wrapper -->
+      </div>
+    </footer>
+  </div>
+</div> <!-- fim wrapper -->
   
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>

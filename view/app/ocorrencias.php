@@ -30,7 +30,7 @@
 
 <body id="page-top">
 <?php include_once "../../model/conexao.php" ?>
-<?php include_once "../navbar.html" ?>
+<?php include_once "../navbar.php" ?>
 <div class="container-fluid">
     <div class="row">
          <a href="index.php" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>
@@ -51,23 +51,25 @@
                 <tr>
                   <th>Descrição</th>
                   <th>Pessoa</th>
+                  <th>Data</th>
                   <th>Excluir</th>
                   <th>Editar</th>
                 </tr>
               </thead>
               <tbody>
               <?php 
-                  $sql = "SELECT * FROM ocorrencia";
+                  $sql = "SELECT * FROM ocorrencia ORDER BY data_ocorrencia DESC";
                   $consulta = mysqli_query($conn, $sql);
                   while ($dados = mysqli_fetch_assoc($consulta)) {
                       $pessoa_id = $dados['pessoa_id'];       
-                      $sql_ocorrencia = "SELECT * FROM ocorrencia JOIN pessoas ON pessoas.id_pessoa = ocorrencia.pessoa_id WHERE pessoa_id = $pessoa_id";
+                      $sql_ocorrencia = "SELECT * FROM ocorrencia JOIN pessoas ON pessoas.id_pessoa = ocorrencia.pessoa_id  WHERE pessoa_id = $pessoa_id";
                       $consulta_ocorrencia = mysqli_query($conn, $sql_ocorrencia);
                       $dados_ocorrencia = mysqli_fetch_assoc($consulta_ocorrencia);  
                       $id = $dados['id_ocorrencia'];                              
                       echo "<tr>";
                       echo "<td>" . $dados['descricao_ocorrencia'] . "</td>"; //nome ocorrencia
-                      echo "<td>" . $dados_ocorrencia['nome'] . "</td>"; //nome pessoa ?>
+                      echo "<td>" . $dados_ocorrencia['nome'] . "</td>"; //nome pessoa 
+                      echo "<td>".$dados['data_ocorrencia'] ."</td>" ?>
                       <td style="color: #337ab7;" data-toggle="modal" data-target="#Cancelar"><i class="fas fa-trash-alt"></i></td>
                       <td style="color: #337ab7;"><a data-toggle="modal" data-target="#editar<?php echo $id; ?>"><i class="fas fa-pencil-alt"></i></a></td>
                       </tr>                  

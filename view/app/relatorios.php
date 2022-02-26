@@ -25,48 +25,54 @@
 </head>
 
 <body id="page-top">
+
 <?php include_once "../../model/conexao.php" ?>
 <?php include_once "../navbar.php" ?>
+
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" >
          <a href="index.php" class="btn-circle btn-lg custom-link" title="Voltar"><i class="icoLojaCadastro fas fa-arrow-alt-circle-left"></i> </a>
-         <a href="../form/cadastroCurso.php" class="btn-circle btn-lg custom-link"  title="Cadastrar Ocorrencia"><i class="icoLojaCadastro fas fa-plus-circle"></i> </a>        
-            <h1 style="font-weight: 330;" class="col-9 text-center">
-                Cursos
+         <a href="../form/cadastroPessoa.php" class="btn-circle btn-lg custom-link"  title="Cadastrar Loja"><i class="icoLojaCadastro fas fa-plus-circle"></i> </a>        
+            <h1 style="font-weight: 330;" class="col-10 text-center">
+                <i class="fas fa-users" style="color: #337ab7; "></i>
+                Docentes
             </h1>    
     </div>    
-  <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Uemg Frutal</h6>
+  <div class="card shadow mb-4 row">
+        <div class="card-header py-3 ">
+          <h6 class="m-0 font-weight-bold text-primary">Uemg Frutal</h6>                    
         </div>
         <div class="card-body">
           <div class="table-responsive" >
             <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
-                  <th>Unidade</th>
+                  <th>MASP</th>
                   <th>Nome</th>
-                  <th>Excluir</th>
-                  <th>Consultar</th>
+                  <th>CPF</th>
+                  <th>Status</th>
+                  <th>Relatório</th>
                 </tr>
               </thead>
-              <tbody>
-              <?php 
-                  $sql = "SELECT * FROM curso";
+              <tbody>                
+                <?php 
+                  $sql = "SELECT * FROM pessoas WHERE status_id ";
                   $consulta = mysqli_query($conn, $sql);
                   while ($dados = mysqli_fetch_assoc($consulta)) {
-                      $unidade_id = $dados['unidade_id'];       
-                      $sql_unidade = "SELECT * FROM curso JOIN unidade ON unidade.id_unidade = curso.unidade_id WHERE unidade_id = $unidade_id";
-                      $consulta_unidade = mysqli_query($conn, $sql_unidade);
-                      $dados_unidade = mysqli_fetch_assoc($consulta_unidade);                                
+                    $pessoa_id = $dados['id_pessoa'];       
+                    $sql_unidade = "SELECT * FROM pessoas JOIN statuspessoa ON statuspessoa.id = pessoas.status_id WHERE id_pessoa = $pessoa_id";
+                    $consulta_unidade = mysqli_query($conn, $sql_unidade);
+                    $dados_pessoa = mysqli_fetch_assoc($consulta_unidade);   
                       echo "<tr>";
-                      echo "<td>" . $dados_unidade['descricao_unidade'] . "</td>"; //nome unidade
-                      echo "<td>" . $dados['nome'] . "</td>"; //nome curso ?>
-                      <td style="color: #337ab7;" data-toggle="modal" data-target="#Cancelar"><i class="fas fa-trash-alt"></i></td>
-                      <td style="color: #337ab7;"><a href="consulta/consultaCurso.php?id=<?php echo $dados['id_curso']; ?>"><i class="fas fa-search"></i></a></td>
+                      echo "<td>" . $dados['masp'] . "</td>";
+                      echo "<td>" . $dados['nome'] . "</td>";
+                      echo "<td>" . $dados['cpf'] . "</td>";
+                      echo "<td>" . $dados_pessoa['descricao'] . "</td>"; ?>
+                      
+                      <td style="color: #337ab7;"><a href="../../pdf.php?id=<?php echo $dados['id_pessoa'];?>"><i class="fas fa-paste"></i></a></td>
                       </tr>    
                 <?php }
-                  ?>                      
+                  ?>                             
               </tbody>
             </table>
           </div>
@@ -89,24 +95,6 @@
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a>
-
-  <!-- MODAL -->
-  <div class="modal fade" id="Cancelar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 id="myModalLabel">Deseja mesmo excluir este cadastro?</h4>                     
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>                              
-                </div>
-                
-                <div class="modal-footer">
-                    <button type="button" href="#" class="btn btn-danger">Excluir</button>
-                </div>
-            </div>
-        </div>
-    </div>
   
   <script src="../../vendor/jquery/jquery.min.js"></script>
   <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

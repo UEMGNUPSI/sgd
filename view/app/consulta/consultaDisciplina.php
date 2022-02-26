@@ -24,7 +24,7 @@
 <body id="page-top">
 
 <?php include_once "../../../model/conexao.php" ?>
-<?php include_once "navbar.html" ?>
+<?php include_once "navbar.php" ?>
 <?php 
      $id = $_GET['id'];
      $sql = "SELECT * FROM disciplina WHERE id_disciplina = $id";
